@@ -72,30 +72,38 @@ app.post('/visit', upload.single("file"), async (req, res) => {
     // Fill email
     const emailField = await untilDriver(until.elementLocated(By.id("emailAddress")), 10000);
     await emailField.sendKeys(USEREMAIL);
+    console.log("Email entered:", USEREMAIL);
+    
     const passwordField = await untilDriver(until.elementLocated(By.id("password")), 10000);
     await passwordField.sendKeys(PASSWORD);
+    console.log("password entered");
+    
 
     // Click next
     const nextButton = await driver.findElement(By.xpath("//*[@id=\"Sign\"]/div/form/div[4]/button"));
     await nextButton.click();
+    console.log("Clicked next button");
     await wait(10000);
 
     const courses = await driver.findElement(By.xpath("//*[@id=\"fullHeightForSidemenu\"]/ul/li[3]"));
     await courses.click();
+    console.log("Clicked courses button");
     await wait(10000);
 
     const searchField = await untilDriver(until.elementLocated(By.xpath("/html/body/app-root/div/app-course-main/app-course/div/div[1]/div/div[3]/div[1]/input")), 10000);
     await searchField.sendKeys(COURSE);
-
+    console.log("Course name entered:", COURSE);
     await wait(10000);
 
     const searchButton = await untilDriver(until.elementLocated(By.xpath("/html/body/app-root/div/app-course-main/app-course/div/div[1]/div/div[3]/div[1]/button")), 10000);
     await searchButton.click();
+    console.log("Clicked search button");
     await wait(10000);
 
     const courseElement = await untilDriver(until.elementLocated(By.xpath(`//*[contains(text(), '${COURSE}')]`)), 10000);
     // const courseElement = await untilDriver(until.elementLocated(By.xpath(`//*[contains(text(), 'Testing_course_practice')]`)), 10000);
     await courseElement.click();
+    console.log("Clicked course element");
     await wait(10000);
     let testIds = [];
 

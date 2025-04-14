@@ -7,6 +7,8 @@ const path = require("path");
 const xlsx = require("xlsx");
 const cors = require("cors");
 const app = express();
+const os = require('os');
+
 const port = 3000;
 const upload = multer({ dest: "uploads/" });
 
@@ -15,6 +17,14 @@ app.use(cors({ origin: ['https://forntend-weightagesplit-1.onrender.com','http:/
 app.use(express.json());
 
 let driver; // Global browser session
+const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'selenium-user-data-'));
+
+const options = new chrome.Options();
+// options.addArguments('--headless');
+options.addArguments('--no-sandbox');
+options.addArguments('--disable-dev-shm-usage');
+options.addArguments(`--user-data-dir=${tmpDir}`); // ✅ unique per session
+
 
 // POST endpoint to perform login
 app.post('/visit', upload.single("file"), async (req, res) => {
@@ -44,7 +54,11 @@ app.post('/visit', upload.single("file"), async (req, res) => {
   try {
     // Start browser once
     if (!driver) {
-      driver = await new Builder().forBrowser('chrome').build();
+      // driver = await new Builder().forBrowser('chrome').build();
+      driver = await new Builder()
+      .forBrowser('chrome')
+      .setChromeOptions(options)
+      .build();
     }
 
     await driver.get(LOGIN_URL);

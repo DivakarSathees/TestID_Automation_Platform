@@ -21,10 +21,11 @@ const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'selenium-user-data-'));
 
 const options = new chrome.Options();
 // options.addArguments('--headless');
+options.addArguments('--headless');
 options.addArguments('--no-sandbox');
 options.addArguments('--disable-dev-shm-usage');
-options.addArguments(`--user-data-dir=${tmpDir}`); // ✅ unique per session
-
+options.addArguments('--disable-gpu');
+options.addArguments('--window-size=1920,1080');
 
 // POST endpoint to perform login
 app.post('/visit', upload.single("file"), async (req, res) => {
@@ -56,9 +57,10 @@ app.post('/visit', upload.single("file"), async (req, res) => {
     if (!driver) {
       // driver = await new Builder().forBrowser('chrome').build();
       driver = await new Builder()
-      .forBrowser('chrome')
-      .setChromeOptions(options)
-      .build();
+        .forBrowser('chrome')
+        .setChromeOptions(options)
+        .build();
+
     }
 
     await driver.get(LOGIN_URL);

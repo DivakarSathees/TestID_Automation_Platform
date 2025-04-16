@@ -83,7 +83,7 @@ app.post('/visit', upload.single("file"), async (req, res) => {
     const nextButton = await driver.findElement(By.xpath("//*[@id=\"Sign\"]/div/form/div[4]/button"));
     await nextButton.click();
     console.log("Clicked next button");
-    // await wait(10000);
+    await wait(10000);
 
     // const courses = await driver.findElement(By.xpath("//*[@id=\"fullHeightForSidemenu\"]/ul/li[3]"));
     const courses = await untilDriver(until.elementLocated(By.xpath("//*[@id=\"fullHeightForSidemenu\"]/ul/li[3]")), 10000);

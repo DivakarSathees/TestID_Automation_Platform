@@ -20,11 +20,11 @@ let driver; // Global browser session
 const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'selenium-user-data-'));
 
 const options = new chrome.Options();
-options.addArguments('--headless');
+// options.addArguments('--headless');
 options.addArguments('--no-sandbox');
 options.addArguments('--disable-dev-shm-usage');
 options.addArguments('--disable-gpu');
-options.addArguments('--window-size=1920,1080');
+// options.addArguments('--window-size=1920,1080');
 
 // POST endpoint to perform login
 app.post('/visit', upload.single("file"), async (req, res) => {
@@ -161,7 +161,7 @@ app.post('/visit', upload.single("file"), async (req, res) => {
     await driver.executeScript("arguments[0].scrollIntoView(true);", viewResultsButton);
     await viewResultsButton.click();
 
-    // await wait(10000);
+    await wait(10000);
   }
   
     let testIds = [];
@@ -174,7 +174,7 @@ app.post('/visit', upload.single("file"), async (req, res) => {
     await searchUserNameField.clear();
     await searchUserNameField.sendKeys(uEmail.UEmail);
 
-    // await wait(5000);
+    await wait(5000);
 
     const searchUserNameButton = await driver.findElement(By.xpath("//*[@id=\"studentModal\"]/div/div[2]/app-test-results-table/div[1]/span/button"));
     await searchUserNameButton.click();

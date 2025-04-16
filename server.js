@@ -90,10 +90,9 @@ app.post('/visit', upload.single("file"), async (req, res) => {
 
     await courses.click();
     console.log("Clicked courses button");
-    // await wait(10000);
+    await wait(10000);
 
     const searchField = await untilDriver(until.elementLocated(By.xpath("/html/body/app-root/div/app-course-main/app-course/div/div[1]/div/div[3]/div[1]/input")), 10000);
-    console.log("Search field located");
     
     await searchField.sendKeys(COURSE);
     console.log("Course name entered:", COURSE);

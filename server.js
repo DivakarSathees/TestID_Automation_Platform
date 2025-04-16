@@ -31,7 +31,7 @@ app.post('/visit', upload.single("file"), async (req, res) => {
   if (!req.file) {
     return res.status(400).send({ error: "No file uploaded." });
   }
-  const { LOGIN_URL, USEREMAIL, PASSWORD, COURSE, MODULE } = req.body;
+  const { LOGIN_URL, USEREMAIL, PASSWORD, COURSE, MODULE, TESTNAME } = req.body;
 
   if (!LOGIN_URL || !USEREMAIL || !PASSWORD) {
     return res.status(400).send({ error: 'LOGIN_URL, USEREMAIL, and PASSWORD are required.' });
@@ -95,7 +95,7 @@ app.post('/visit', upload.single("file"), async (req, res) => {
     const searchField = await untilDriver(until.elementLocated(By.xpath("/html/body/app-root/div/app-course-main/app-course/div/div[1]/div/div[3]/div[1]/input")), 10000);
     await searchField.sendKeys(COURSE);
     console.log("Course name entered:", COURSE);
-    await wait(10000);
+    // await wait(10000);
 
     const searchButton = await untilDriver(until.elementLocated(By.xpath("/html/body/app-root/div/app-course-main/app-course/div/div[1]/div/div[3]/div[1]/button")), 10000);
     await searchButton.click();
@@ -107,6 +107,62 @@ app.post('/visit', upload.single("file"), async (req, res) => {
     await courseElement.click();
     console.log("Clicked course element");
     await wait(10000);
+
+    // const moduleElement = await untilDriver(until.elementLocated(By.xpath(`//*[@id="ui-tabpanel-3"]/div/div/div[1]/div[3]/div[2]`)), 10000);
+    // await moduleElement.click();
+    // console.log("Clicked module element");
+    // await wait(10000);
+    const xpath = `//*[@id="ui-tabpanel-3"]/div/div/div[1]/div[3]/div[${MODULE}]`;
+
+    const moduleElement = await driver.wait(until.elementLocated(By.xpath(xpath)), 10000);
+
+    // Make sure it's visible, scroll into view, and enabled
+    await driver.wait(until.elementIsVisible(moduleElement), 10000);
+    await driver.executeScript("arguments[0].scrollIntoView(true);", moduleElement);
+    await driver.wait(until.elementIsEnabled(moduleElement), 10000);
+
+    // Now click
+    await moduleElement.click();
+    console.log("Clicked module element");
+    // await wait(10000);
+
+
+    // /html/body/app-root/div/app-course-main/app-course/p-dialog[7]/div/div[2]/p-tabview/div/div/p-tabpanel[4]/div/div/div/div[2]/div/div[2]/div[2]/div[1]/div[1]/span[2]
+
+    // const xpath1 = `/html/body/app-root/div/app-course-main/app-course/p-dialog[7]/div/div[2]/p-tabview/div/div/p-tabpanel[4]/div/div/div/div[2]/div/div[2]/div[2]/div[1]/div[6]/button[1]`;
+
+    try{
+    
+
+    const xpath1 = `//div[contains(@class, 'moduletest')][.//div[contains(@class, 'ui-g-5') and contains(normalize-space(.), "${TESTNAME}")]]//button[normalize-space(text())='View Results']`;
+    // const xpath1 = `//div[contains(@class, 'moduletest')][.//span[contains(@class, 'testname') and normalize-space(text()) = '${moduleName}']]//button[normalize-space(text())='View Results']`;
+
+    const viewResultsButton = await driver.wait(
+      until.elementLocated(By.xpath(xpath1)),
+      10000
+    );
+
+    await driver.wait(until.elementIsVisible(viewResultsButton), 10000);
+    await driver.executeScript("arguments[0].scrollIntoView(true);", viewResultsButton);
+    await viewResultsButton.click();
+
+    // await wait(10000);
+  }catch (error) {
+    // const xpath1 = `//div[contains(@class, 'moduletest')][.//div[contains(@class, 'ui-g-5') and contains(normalize-space(.), "${TESTNAME}")]]//button[normalize-space(text())='View Results']`;
+    const xpath1 = `//div[contains(@class, 'moduletest')][.//span[contains(@class, 'testname') and normalize-space(text()) = '${TESTNAME}']]//button[normalize-space(text())='View Results']`;
+
+    const viewResultsButton = await driver.wait(
+      until.elementLocated(By.xpath(xpath1)),
+      10000
+    );
+
+    await driver.wait(until.elementIsVisible(viewResultsButton), 10000);
+    await driver.executeScript("arguments[0].scrollIntoView(true);", viewResultsButton);
+    await viewResultsButton.click();
+
+    // await wait(10000);
+  }
+  
     let testIds = [];
 
 
@@ -117,7 +173,7 @@ app.post('/visit', upload.single("file"), async (req, res) => {
     await searchUserNameField.clear();
     await searchUserNameField.sendKeys(uEmail.UEmail);
 
-    await wait(5000);
+    // await wait(5000);
 
     const searchUserNameButton = await driver.findElement(By.xpath("//*[@id=\"studentModal\"]/div/div[2]/app-test-results-table/div[1]/span/button"));
     await searchUserNameButton.click();

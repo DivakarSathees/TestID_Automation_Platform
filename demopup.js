@@ -166,7 +166,7 @@ const puplocalstorage = async (email, password, course, module, testname) => {
     try {
         console.log("Launching automation...");
 
-        const filePath = "/home/coder/project/workspace/TestID/TestID_Automation_Platform/testingUseremail.xlsx";
+        const filePath = "D:/Project_Node_Selenium/tesingUserEmail.xlsx";
         const workbook = xlsx.readFile(filePath);
         const sheetName = workbook.SheetNames[0];
         const sheetData = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
@@ -192,9 +192,18 @@ const puplocalstorage = async (email, password, course, module, testname) => {
 
 async function loginAndGetLocalStorage(url, USEREMAIL, PASSWORD, COURSE, MODULE, TESTNAME, UEmails) {
     const browser = await puppeteer.launch({
-        headless: true,
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
-    });
+        // headless: true,
+        headless: false,
+        cacheDir: '/opt/render/.cache/puppeteer',
+        args: [
+                '--no-sandbox',
+                    '--disable-setuid-sandbox',
+                    '--disable-dev-shm-usage',
+                    '--remote-debugging-port=9222',
+                    '--start-maximized',
+                    '--ignore-certificate-errors'
+                ],
+        });
 
     const page = await browser.newPage();
     await page.setViewport({ width: 1480, height: 800 });
@@ -205,6 +214,7 @@ async function loginAndGetLocalStorage(url, USEREMAIL, PASSWORD, COURSE, MODULE,
         await page.type("#password", PASSWORD);
         await page.click(".form__button.ladda-button");
         await page.waitForNavigation({ waitUntil: "networkidle2" });
+        await delay(2000);
 
         await page.waitForSelector("li[ptooltip='Courses']", { visible: true });
         await page.click("li[ptooltip='Courses']");

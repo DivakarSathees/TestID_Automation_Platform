@@ -265,7 +265,7 @@ async function loginAndGetLocalStorage(url, USEREMAIL, PASSWORD, COURSE, MODULE,
             });
             if (clicked3) {
                 console.log("✅ Search input clicked");
-        await page.screenshot({ path: 'screenshot_course_search.png', fullPage: true });
+        // await page.screenshot({ path: 'screenshot_course_search.png', fullPage: true });
 
             }
             else {
@@ -279,6 +279,9 @@ async function loginAndGetLocalStorage(url, USEREMAIL, PASSWORD, COURSE, MODULE,
                   input.value = input.value.slice(0, -1); // remove last character (like backspace)
                 }
               });
+              console.log("Backspace pressed");
+            await delay(1000);
+              
               
 
             // await page.type('input[placeholder="Enter your search term"]', UEmail, { delay: 100 });
@@ -291,6 +294,9 @@ async function loginAndGetLocalStorage(url, USEREMAIL, PASSWORD, COURSE, MODULE,
                     throw new Error("Input field not found");
                 }
             }, UEmail);
+            console.log("Email entered:", UEmail);
+            await delay(1000);
+            
             const clicked4 = await page.evaluate(() => {
                 const button = document.querySelector('button.ui-inputgroup-addon-ec');
                 if (button) {
@@ -299,6 +305,8 @@ async function loginAndGetLocalStorage(url, USEREMAIL, PASSWORD, COURSE, MODULE,
                 }
                 return false;
             });
+            console.log("Search email button clicked:", clicked4);
+            
             if (clicked4) {
                 console.log("✅ Search email btn clicked");
             }

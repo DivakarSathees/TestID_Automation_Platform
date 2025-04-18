@@ -180,7 +180,7 @@ async function loginAndGetLocalStorage(url, USEREMAIL, PASSWORD, COURSE, MODULE,
 
 
         await delay(15000);
-        await page.screenshot({ path: 'screenshot_course_search.png', fullPage: true });
+        // await page.screenshot({ path: 'screenshot_course_search.png', fullPage: true });
 
         const moduleClicked = await page.evaluate((moduleIndex) => {
             const xpath = `//*[@id="ui-tabpanel-3"]/div/div/div[1]/div[3]/div[${moduleIndex}]`;

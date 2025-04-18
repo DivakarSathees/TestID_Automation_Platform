@@ -269,14 +269,65 @@ async function loginAndGetLocalStorage(url, USEREMAIL, PASSWORD, COURSE, MODULE,
             }
             
             await page.keyboard.press('Backspace');
-            await page.type('input[placeholder="Enter your search term"]', UEmail, { delay: 100 });
 
-            await page.click('button.ui-inputgroup-addon-ec');
+            // await page.type('input[placeholder="Enter your search term"]', UEmail, { delay: 100 });
+            await page.evaluate((courseName) => {
+                const input = document.querySelector('input[placeholder="Enter your search term"]');
+                if (input) {
+                    input.value = courseName;
+                    input.dispatchEvent(new Event('input', { bubbles: true })); // simulate typing event
+                } else {
+                    throw new Error("Input field not found");
+                }
+            }, UEmail);
+            const clicked4 = await page.evaluate(() => {
+                const button = document.querySelector('button.ui-inputgroup-addon-ec');
+                if (button) {
+                    button.click();
+                    return true;
+                }
+                return false;
+            });
+            if (clicked4) {
+                console.log("✅ Search email btn clicked");
+            }
+            else {
+                console.log("❌ Search email btn not found");
+            }
+            // await page.click('button.ui-inputgroup-addon-ec');
             await delay(3000);
 
-            await page.waitForSelector('#testresulttable tr:nth-child(2) td:nth-child(4) span:nth-child(2) i');
-            await page.click('#testresulttable tr:nth-child(2) td:nth-child(4) span:nth-child(2) i');
-
+            // await page.waitForSelector('#testresulttable tr:nth-child(2) td:nth-child(4) span:nth-child(2) i');
+            await page.evaluate(async () => {
+                const selector = '#testresulttable tr:nth-child(2) td:nth-child(4) span:nth-child(2) i';
+                const timeout = 30000;
+                const interval = 100; // check every 100ms
+    
+                const start = Date.now();
+                while (Date.now() - start < timeout) {
+                    if (document.querySelector(selector)) {
+                        return;
+                    }
+                    await new Promise(resolve => setTimeout(resolve, interval));
+                }
+                throw new Error(`Timeout: Element ${selector} not found after ${timeout}ms`);
+            });
+            
+            // await page.click('#testresulttable tr:nth-child(2) td:nth-child(4) span:nth-child(2) i');
+            const clicked5 = await page.evaluate(() => {
+                const button = document.querySelector('#testresulttable tr:nth-child(2) td:nth-child(4) span:nth-child(2) i');
+                if (button) {
+                    button.click();
+                    return true;
+                }
+                return false;
+            });
+            if (clicked5) {
+                console.log("✅ testresult btn clicked");
+            }
+            else {
+                console.log("❌ testresult btn not found");
+            }
             await delay(3000);
             const pages = await browser.pages();
             const newTab = pages[pages.length - 1];

@@ -272,7 +272,14 @@ async function loginAndGetLocalStorage(url, USEREMAIL, PASSWORD, COURSE, MODULE,
                 console.log("❌ Search input not found");
             }
             
-            await page.keyboard.press('Backspace');
+            // await page.keyboard.press('Backspace');
+            await page.evaluate(() => {
+                const input = document.activeElement;
+                if (input && input.value) {
+                  input.value = input.value.slice(0, -1); // remove last character (like backspace)
+                }
+              });
+              
 
             // await page.type('input[placeholder="Enter your search term"]', UEmail, { delay: 100 });
             await page.evaluate((courseName) => {

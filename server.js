@@ -259,6 +259,11 @@ app.post('/visit', upload.single("file"), async (req, res) => {
   // }
 });
 
+app.get('/screenshot', (req, res) => {
+  res.sendFile(__dirname + '/screenshot_course_search.png');
+});
+
+
 // Optional endpoint to close browser
 app.get('/close', async (req, res) => {
   if (driver) {

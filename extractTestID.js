@@ -265,6 +265,8 @@ async function loginAndGetLocalStorage(url, USEREMAIL, PASSWORD, COURSE, MODULE,
             });
             if (clicked3) {
                 console.log("✅ Search input clicked");
+        await page.screenshot({ path: 'screenshot_course_search.png', fullPage: true });
+
             }
             else {
                 console.log("❌ Search input not found");

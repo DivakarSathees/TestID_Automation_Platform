@@ -56,6 +56,7 @@ async function loginAndGetLocalStorage(url, USEREMAIL, PASSWORD, COURSE, MODULE,
     //     });
 
     const browser = await puppeteer.launch({
+        headless: true,
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',

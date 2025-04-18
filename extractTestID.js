@@ -69,6 +69,8 @@ async function loginAndGetLocalStorage(url, USEREMAIL, PASSWORD, COURSE, MODULE,
           process.env.NODE_ENV === "production"
             ? process.env.PUPPETEER_EXECUTABLE_PATH
             : puppeteer.executablePath(),
+        protocolTimeout: 120000,
+
       });
 
     const page = await browser.newPage();

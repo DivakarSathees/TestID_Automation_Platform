@@ -21,6 +21,13 @@ exports.extractTestID = async (filepath, url, email, password, course, module, t
         fs.unlinkSync(filePath); // remove file after reading
         console.log("Extracted User Emails:", UEmails);
 
+        if (!fs.existsSync('/usr/bin/chromium')) {
+        console.error('Chromium not found at /usr/bin/chromium');
+        } else {
+        console.log('Chromium found at /usr/bin/chromium');
+        }
+
+
         const { testIds, token } = await loginAndGetLocalStorage(
             url, email, password, course, module, testname, UEmails
         );

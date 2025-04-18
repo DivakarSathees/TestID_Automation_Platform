@@ -234,8 +234,39 @@ async function loginAndGetLocalStorage(url, USEREMAIL, PASSWORD, COURSE, MODULE,
         for (const { UEmail } of UEmails) {
             console.log("Processing email:", UEmail);
 
-            await page.waitForSelector('input[placeholder="Enter your search term"]');
-            await page.click('input[placeholder="Enter your search term"]', { clickCount: 3 });
+            // await page.waitForSelector('input[placeholder="Enter your search term"]');
+            await page.evaluate(async () => {
+                const selector = 'input[placeholder="Enter your search term"]';
+                const timeout = 30000;
+                const interval = 100; // check every 100ms
+    
+                const start = Date.now();
+                while (Date.now() - start < timeout) {
+                    if (document.querySelector(selector)) {
+                        return;
+                    }
+                    await new Promise(resolve => setTimeout(resolve, interval));
+                }
+                throw new Error(`Timeout: Element ${selector} not found after ${timeout}ms`);
+            });
+
+
+            // await page.click('input[placeholder="Enter your search term"]', { clickCount: 3 });
+            const clicked3 = await page.evaluate(() => {
+                const button = document.querySelector('input[placeholder="Enter your search term"]');
+                if (button) {
+                    button.click();
+                    return true;
+                }
+                return false;
+            });
+            if (clicked3) {
+                console.log("✅ Search input clicked");
+            }
+            else {
+                console.log("❌ Search input not found");
+            }
+            
             await page.keyboard.press('Backspace');
             await page.type('input[placeholder="Enter your search term"]', UEmail, { delay: 100 });
 
